@@ -35,6 +35,7 @@ function(sugar_add_android_gtest)
   set(APP_DESTINATION "${APP_DESTINATION}/${x_NAME}/${app_target}")
 
   set(APP_RESOURCES "${x_RESOURCE_DIR}")
+  set(APP_STATIC_RESOURCES "${x_RESOURCE_DIR}_static")
   set(APP_TEST_DATA "${x_TESTDATA_DIR}")
   set(APP_DEPENDENCY "${x_APP_DEPENDENCY}")
 
