@@ -50,14 +50,9 @@ endif()
 string(COMPARE EQUAL "@APP_RESOURCES@" "" is_empty)$
 if(is_empty)$
   set(RES_DIR_NAME "res")$
-else()$
-  set(RES_DIR_NAME "@APP_RESOURCES@")$
-endif()$
-
-string(COMPARE EQUAL "@APP_STATIC_RESOURCES@" "" is_empty)$
-if(is_empty)$
   set(STATIC_RES_DIR_NAME "res_static")$
 else()$
+  set(RES_DIR_NAME "@APP_RESOURCES@")$
   set(STATIC_RES_DIR_NAME "@APP_STATIC_RESOURCES@")$
 endif()$
 
