@@ -22,34 +22,75 @@ function(sugar_add_ios_gtest testname targetname)
 
   sugar_test_target_exists(${targetname})
 
-  find_program(IOS_DEPLOY "ios-deploy" HINTS ${IOS_DEPLOY_ROOT})
-  if(NOT IOS_DEPLOY)
-    sugar_fatal_error(
+  string(COMPARE EQUAL "${CMAKE_OSX_SYSROOT}" "iphonesimulator" is_ios_sim)
+
+  if(is_ios_sim)
+
+    find_program(IOS_SIM "ios-sim" HINTS ${IOS_SIM_ROOT})
+    if(NOT IOS_SIM)
+      sugar_fatal_error(
+          "ios-sim not found, please install it from:"
+          "https://github.com/phonegap/ios-sim/releases"
+          "and add to PATH"
+      )
+    endif()
+    sugar_status_print("Use ios-sim: ${IOS_SIM}")
+    sugar_find_python3()
+
+    sugar_test_variable_not_empty(PYTHON_EXECUTABLE)
+    sugar_test_variable_not_empty(SUGAR_ROOT)
+    add_test(
+        NAME
+        ${testname}
+        WORKING_DIRECTORY
+        "${PROJECT_BINARY_DIR}"
+        COMMAND
+        "${PYTHON_EXECUTABLE}"
+        "${SUGAR_ROOT}/python/ios_simulator_launcher.py"
+        "--sim"
+        "${IOS_SIM}"
+        "--target"
+        "${targetname}"
+        "--devicetypeid"
+        "iPhone-5s"
+        "--args"
+        ${test_argv}
+        "--configuration"
+        $<CONFIGURATION>
+    )
+
+  else()
+
+    find_program(IOS_DEPLOY "ios-deploy" HINTS ${IOS_DEPLOY_ROOT})
+    if(NOT IOS_DEPLOY)
+      sugar_fatal_error(
         "ios-deploy not found, please install it from:"
         "https://github.com/phonegap/ios-deploy/releases"
         "and add to PATH"
-    )
-  endif()
-  sugar_status_print("Use ios-deploy: ${IOS_DEPLOY}")
-  sugar_find_python3()
+      )
+    endif()
+    sugar_status_print("Use ios-deploy: ${IOS_DEPLOY}")
+    sugar_find_python3()
 
-  sugar_test_variable_not_empty(PYTHON_EXECUTABLE)
-  sugar_test_variable_not_empty(SUGAR_ROOT)
-  add_test(
-      NAME
-      ${testname}
-      WORKING_DIRECTORY
-      "${PROJECT_BINARY_DIR}"
-      COMMAND
-      "${PYTHON_EXECUTABLE}"
-      "${SUGAR_ROOT}/python/ios_device_launcher.py"
-      "--target"
-      "${targetname}"
-      "--args"
-      ${test_argv}
-      "--configuration"
-      $<CONFIGURATION>
-      "--deploy"
-      "${IOS_DEPLOY}"
-  )
+    sugar_test_variable_not_empty(PYTHON_EXECUTABLE)
+    sugar_test_variable_not_empty(SUGAR_ROOT)
+    add_test(
+        NAME
+        ${testname}
+        WORKING_DIRECTORY
+        "${PROJECT_BINARY_DIR}"
+        COMMAND
+        "${PYTHON_EXECUTABLE}"
+        "${SUGAR_ROOT}/python/ios_device_launcher.py"
+        "--target"
+        "${targetname}"
+        "--args"
+        ${test_argv}
+        "--configuration"
+        $<CONFIGURATION>
+        "--deploy"
+        "${IOS_DEPLOY}"
+    )
+
+  endif(is_ios_sim)
 endfunction()
