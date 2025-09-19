@@ -26,12 +26,12 @@ function(sugar_add_ios_gtest testname targetname)
 
   if(is_ios_sim)
 
-    find_program(IOS_SIM "ios-sim" HINTS ${IOS_SIM_ROOT})
+    find_program(IOS_SIM "ios-sim")
     if(NOT IOS_SIM)
       sugar_fatal_error(
           "ios-sim not found, please install it from:"
-          "https://github.com/phonegap/ios-sim/releases"
-          "and add to PATH"
+          "brew install ios-sim"
+          "and add to PATH if needs"
       )
     endif()
     sugar_status_print("Use ios-sim: ${IOS_SIM}")

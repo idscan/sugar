@@ -12,11 +12,9 @@ include(sugar_status_debug)
 
 if(HUNTER_ENABLED)
   string(COMPARE EQUAL "${CMAKE_OSX_SYSROOT}" "iphoneos" is_ios)
-  string(COMPARE EQUAL "${CMAKE_OSX_SYSROOT}" "iphonesimulator" is_ios_sim)
+  # note is_ios is not true for ios simulator builds
   if(is_ios)
     hunter_add_package(ios_deploy)
-  elseif(is_ios_sim)
-    hunter_add_package(ios_sim)
   endif()
 endif()
 
