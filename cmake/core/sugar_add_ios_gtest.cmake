@@ -26,15 +26,6 @@ function(sugar_add_ios_gtest testname targetname)
 
   if(is_ios_sim)
 
-    find_program(IOS_SIM "ios-sim")
-    if(NOT IOS_SIM)
-      sugar_fatal_error(
-          "ios-sim not found, please install it from:"
-          "brew install ios-sim"
-          "and add to PATH if needs"
-      )
-    endif()
-    sugar_status_print("Use ios-sim: ${IOS_SIM}")
     sugar_find_python3()
 
     sugar_test_variable_not_empty(PYTHON_EXECUTABLE)
@@ -48,11 +39,11 @@ function(sugar_add_ios_gtest testname targetname)
         "${PYTHON_EXECUTABLE}"
         "${SUGAR_ROOT}/python/ios_simulator_launcher.py"
         "--sim"
-        "${IOS_SIM}"
+        "${SUGAR_ROOT}/python/ios_sim.sh"
         "--target"
         "${targetname}"
         "--devicetypeid"
-        "iPhone-5s"
+        "iPhone 16"
         "--args"
         ${test_argv}
         "--configuration"

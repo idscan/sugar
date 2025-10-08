@@ -12,7 +12,7 @@ import tempfile
 
 parser = argparse.ArgumentParser(
     description="""
-        ios-sim launcher. Expected that application is gtest.
+        ios simulator launcher. Expected that application is gtest.
         If output is looks like passed test - exit with 0,
         otherwise exit with 1
         """
@@ -110,16 +110,16 @@ def try_run_simulator(application):
 
   launch_command = [
       args.sim,
-      'launch',
+      '-a',
       application,
-      '--stdout',
+      '-o',
       cout_sim_log.name,
-      '--stderr',
+      '-e',
       cerr_sim_log.name,
   ]
 
   if args.devicetypeid:
-    launch_command.append('--devicetypeid')
+    launch_command.append('-d')
     launch_command.append(args.devicetypeid)
 
   if args.args:
