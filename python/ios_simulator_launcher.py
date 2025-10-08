@@ -117,11 +117,11 @@ def try_run_simulator(application):
       '--stderr',
       cerr_sim_log.name,
   ]
-  
+
   if args.devicetypeid:
     launch_command.append('--devicetypeid')
     launch_command.append(args.devicetypeid)
-                          
+
   if args.args:
     launch_command.append('--args')
     for x in args.args:
