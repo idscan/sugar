@@ -89,7 +89,7 @@ def find_application(dir):
   message = '{} not found in {}'.format(application, dir)
   sys.exit(message)
 
-app = find_application('{}-iphonesimulator'.format(args.configuration))
+app = find_application(args.configuration) # in old combined build scheme, used to append -iphonesimulator here
 
 log.p('app found: {}'.format(app))
 

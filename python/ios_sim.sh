@@ -4,8 +4,8 @@ set -x
 
 app=
 device="IPhone 16"
-stderr_file=
-stdout_file=
+stderr_file=.tmp.stderr
+stdout_file=.tmp.stdout
 while getopts a:d:e:o: name
 do
    case $name in
@@ -19,14 +19,16 @@ do
 done
 if [ -z "$app" ]; then
    printf "Option -a is required\n"
-fi
-if [ ! -z "$stderr_file" ]; then
-   echo -n > $stderr_file
-fi
-if [ ! -z "$stderr_file" ]; then
-   echo -n > $stderr_file
+   exit 1
 fi
 
-xcrun simctl boot "${device}"
+# Ensure stdout and stderr are not stale
+echo -n > $stdout_file
+echo -n > $stderr_file
+
+# If simimulator is running the boot call fails but says it is Booted state
+(xcrun simctl boot "${device}" | tee .tmp.boot.out) || fgrep -s "boot device in current state: Booted" .tmp.boot.out
 xcrun simctl install "${device}" "${app}"
-xcrun simctl launch --console "${device}" ${POLLY_IOS_BUNDLE_IDENTIFIER} ${stdout_file:+> ${stdout_file}} ${stderr_file:+2> ${stderr_file}}
+# Use --console and > redirects, not official --stdout and --stderr. Later don't seem to work.
+xcrun simctl launch --console "${device}" ${POLLY_IOS_BUNDLE_IDENTIFIER} 2>"$stderrfile" >"$stdout_file"
+echo "reached end"
