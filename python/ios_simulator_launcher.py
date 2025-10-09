@@ -132,7 +132,7 @@ def try_run_simulator(application):
   cout_sim_log.close()
   cerr_sim_log.close()
 
-  cout_data = open(cout_sim_log.name, 'r').readlines()
+  cout_data = open(cout_sim_log.name, 'r').read()
   cerr_data = open(cerr_sim_log.name, 'r').read()
 
   if len(cerr_data) != 0:
@@ -144,21 +144,14 @@ def try_run_simulator(application):
   if len(cout_data) == 0:
     sys.exit('output from {} is empty'.format(application))
 
-  for x in cout_data:
-    print(x, end='')
+  print(cout_data)
 
-  # check 'YOU HAVE * DISABLED TESTS' message
-  if cout_data[-1] == '\n' and cout_data[-3] == '\n':
-    if re.match('^  YOU HAVE [1-9][0-9]* DISABLED TESTS?$', cout_data[-2]):
-      cout_data = cout_data[0:-3]
-
-  last_line = cout_data[-1]
-  if re.match('^\[  PASSED  \] [1-9][0-9]* tests?.$', last_line):
-    return 0
-  elif re.match('^ [1-9][0-9]* FAILED TEST$', last_line):
+  if re.search('^ [1-9][0-9]* FAILED TEST$', cout_data, re.MULTILINE):
     return 1
+  elif re.search('^\[  PASSED  \] [1-9][0-9]* tests?.$', cout_data, re.MULTILINE):
+    return 0
   else:
-    sys.exit('Unexpected format: {}'.format(last_line))
+    sys.exit("Can't find PASSED or FAILED test strings in output")
 
 def run_simulator(application):
   retry_number = 3

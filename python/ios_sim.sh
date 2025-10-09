@@ -30,5 +30,5 @@ echo -n > $stderr_file
 (xcrun simctl boot "${device}" | tee .tmp.boot.out) || fgrep -s "boot device in current state: Booted" .tmp.boot.out
 xcrun simctl install "${device}" "${app}"
 # Use --console and > redirects, not official --stdout and --stderr. Later don't seem to work.
-xcrun simctl launch --console "${device}" ${POLLY_IOS_BUNDLE_IDENTIFIER} 2>"$stderrfile" >"$stdout_file"
+xcrun simctl launch --console "${device}" ${POLLY_IOS_BUNDLE_IDENTIFIER} 2>"$stderr_file" >"$stdout_file"
 echo "reached end"
